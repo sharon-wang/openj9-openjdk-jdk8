@@ -116,9 +116,10 @@ public class CheckRegisterInLog
             System.err.println("Creating group descriptor");
             ActivationGroupDesc groupDesc =
                 new ActivationGroupDesc(p, null);
-            System.err.println("Registering group");
+            System.err.println("Getting system");
             ActivationSystem system = ActivationGroup.getSystem();
-            ActivationGroupID groupID = system.registerGroup(groupDesc);
+            System.err.println("Registering group");
+            ActivationGroupID groupID = system.registerGroup(groupDesc);    
 
             System.err.println("Creating descriptor");
             ActivationDesc desc =
