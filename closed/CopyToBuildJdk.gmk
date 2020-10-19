@@ -159,14 +159,25 @@ $(call openj9_copy_files_and_debuginfos, \
 		$(OPENJ9_VM_BUILD_DIR)/redirector/ \
 		$(addprefix $(OPENJ9_LIBS_DIR), /j9vm/ /server/)))
 
+# Decide which GC lib(s) to copy
+ifeq (true,$(OPENJ9_ENABLE_MIXED_REFERENCES))
+  POINTER_MODE := mixed
+else ifeq (compressedrefs,$(OPENJ9_LIBS_SUBDIR))
+  POINTER_MODE := compressed
+else
+  POINTER_MODE := full
+endif
+
 # regular shared libraries
 
 $(call openj9_copy_shlibs, \
 	cuda4j29 \
 	j9dmp29 \
 	j9jextract \
-	j9gc29 \
-	j9gcchk29 \
+	$(if $(filter compressed mixed,$(POINTER_MODE)),j9gc29) \
+	$(if $(filter full mixed,$(POINTER_MODE)),j9gc_full29) \
+	$(if $(filter compressed mixed,$(POINTER_MODE)),j9gcchk29) \
+	$(if $(filter full mixed,$(POINTER_MODE)),j9gcchk_full29) \
 	j9hookable29 \
 	j9jit29 \
 	j9jnichk29 \
